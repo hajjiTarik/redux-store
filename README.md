@@ -1,5 +1,5 @@
 # Redux Custom Store
-### Redux custom store is a redux store with additional features (redux-saga, devTools)...
+Redux custom store is a redux store with additional features (redux-saga, devTools)...
 
 ### Usage :
 
