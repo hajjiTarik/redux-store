@@ -28,8 +28,42 @@ const store = new Store({preloadState , sagas});
 For Server Side rendering you can use `dispatchInitActions` :
 
 ```js
-const actions = [initAction_1(), init_Action2_() ...];
-Store.dispatchInitActions(actions).then (() => {
+store.dispatchInitActions(actions).then (() => {
  // put your render here
 });
+
+function indexClient(context) {
+  return new Promise((resolve, reject) => {
+    try {
+      config.update(context.config);
+      const appComponent = require('../app/appComponent').default;
+      
+      const sagas = [initSaga_1, initSaga_2]; // will run in SSR
+      const actions = [initAction_1(), init_Action2_() ...];
+      const store = new Store(sagas);
+
+      store.dispatchInitActions(actions).then (() => {
+         const element = (
+            <Provider store={store}>
+              <appComponent />
+            </Provider>
+          )
+          const state = {
+            preloadState: store.getSate(),
+            config: context.config
+          }
+          resolve({
+            element,
+            state,
+          });
+          
+      }).catch((err) => {
+        reject(err);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 ```
