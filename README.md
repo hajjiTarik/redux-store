@@ -28,10 +28,6 @@ const store = new Store({preloadState , sagas});
 For Server Side rendering you can use `dispatchInitActions` :
 
 ```js
-store.dispatchInitActions(actions).then (() => {
- // put your render here
-});
-
 function indexClient(context) {
   return new Promise((resolve, reject) => {
     try {
