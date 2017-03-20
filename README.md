@@ -10,10 +10,7 @@ import Store from './path/to/Store';
 ```
 #### 2 - instanciate the store with params :
 The store takes an initial state and a sagas list, and it fork all sagas passed in parametre.
-##### PS 
-Normally we must pass to the store only the sagas of initialisations, if one has sagas specific to a domain is better passed by an HOC saga, here an example in the same repository :
-
-[Redux SAGA HOC](https://www.npmjs.com/package/redux-saga-hoc)
+`PS` : Normally we must pass to the store only the sagas of initialisations, if one has sagas specific to a domain is better passed by an HOC saga, here an example in the same repository [Redux SAGA HOC](https://www.npmjs.com/package/redux-saga-hoc)
 
 
 ```js
