@@ -3,12 +3,12 @@ Redux custom store is a redux store with additional features (redux-saga, devToo
 
 ### Usage :
 
-#### 1 - add class Store :
+#### Add class Store :
 
 ```js
 import Store from './path/to/Store';
 ```
-#### 2 - instanciate the store with params :
+#### Instanciate the store with params :
 The store takes an initial state and a sagas list, and it fork all sagas passed in parametre.
 
 
@@ -24,7 +24,7 @@ const sagas = [initSaga_1, initSaga_2]; // initial sagas
 const store = new Store({preloadState , sagas});
 ```
 
-#### 3 - SSR :
+#### SSR :
 For Server Side rendering you can use `dispatchInitActions` :
 
 ```js
