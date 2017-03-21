@@ -29,7 +29,7 @@ export default class Store {
     );
 
     this.sagaPromises = (!(sagas instanceof Array) ? [sagas] : sagas)
-      .map(saga => sagaMiddleware.run(saga));
+      .map(saga => sagaMiddleware.run(saga).done);
 
     if (module.hot && process.env.NODE_ENV === 'development') {
       module.hot.accept('../Reducers', () => {
