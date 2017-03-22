@@ -7,12 +7,12 @@ export const defaultOptions = {
   sagas: [],
 };
 
-export default class Store {
+export default class ConfigureStore {
   constructor({
-    preloadState = defaultOptions.preloadState,
-    sagas = defaultOptions.sagas,
-  } = defaultOptions) {
-    this.sagaPromises = [];
+    preloadedState = {},
+    sagas = [],
+  }) {
+    this.promises = [];
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [
       sagaMiddleware,
@@ -20,6 +20,7 @@ export default class Store {
     let composeEnhancers = compose;
     if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
       composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || composeEnhancers;
+     
     }
     const enhancer = applyMiddleware(...middlewares);
     const store = createStore(
@@ -28,7 +29,7 @@ export default class Store {
       composeEnhancers(enhancer),
     );
 
-    this.sagaPromises = (!(sagas instanceof Array) ? [sagas] : sagas)
+    this.promises = (!(sagas instanceof Array) ? [sagas] : sagas)
       .map(saga => sagaMiddleware.run(saga).done);
 
     if (module.hot && process.env.NODE_ENV === 'development') {
@@ -44,12 +45,12 @@ export default class Store {
     );
   }
 
-  dispatchInitActions = actions => new Promise((resolve, reject) => {
+  initActions = actions => new Promise((resolve, reject) => {
     actions.forEach((action) => {
       this.dispatch(action);
     });
     this.dispatch(END);
-    Promise.all(this.sagaPromises).then(() => {
+    Promise.all(this.promises).then(() => {
       resolve();
     }).catch(() => {
       reject();
