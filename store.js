@@ -20,7 +20,6 @@ export default class ConfigureStore {
     let composeEnhancers = compose;
     if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
       composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || composeEnhancers;
-     
     }
     const enhancer = applyMiddleware(...middlewares);
     const store = createStore(
@@ -32,12 +31,8 @@ export default class ConfigureStore {
     this.promises = (!(sagas instanceof Array) ? [sagas] : sagas)
       .map(saga => sagaMiddleware.run(saga).done);
 
-    if (module.hot && process.env.NODE_ENV === 'development') {
-      module.hot.accept('../Reducers', () => {
-        store.replaceReducer(require('../Reducers')); // eslint-disable-line global-require
-      });
-    }
-
+    this.hmrReducers(store);
+    
     Object.assign(this, store,
       {
         runSaga: sagaMiddleware.run,
@@ -45,6 +40,14 @@ export default class ConfigureStore {
     );
   }
 
+  hmrReducers = (store) => {
+    if (module.hot && process.env.NODE_ENV === 'development') {
+      module.hot.accept('../Reducers', () => {
+        store.replaceReducer(require('../Reducers')); // eslint-disable-line global-require
+      });
+    }
+  }
+  
   initActions = actions => new Promise((resolve, reject) => {
     actions.forEach((action) => {
       this.dispatch(action);
