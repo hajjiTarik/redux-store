@@ -31,7 +31,7 @@ export default class ConfigureStore {
     this.promises = (!(sagas instanceof Array) ? [sagas] : sagas)
       .map(saga => sagaMiddleware.run(saga).done);
 
-    this.hmrReducers(store);
+    this.hmrReducers();
     
     Object.assign(this, store,
       {
@@ -40,10 +40,10 @@ export default class ConfigureStore {
     );
   }
 
-  hmrReducers = (store) => {
+  hmrReducers = () => {
     if (module.hot && process.env.NODE_ENV === 'development') {
       module.hot.accept('../Reducers', () => {
-        store.replaceReducer(require('../Reducers')); // eslint-disable-line global-require
+        this.replaceReducer(require('../Reducers')); // eslint-disable-line global-require
       });
     }
   }
