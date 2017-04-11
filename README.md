@@ -1,4 +1,4 @@
-# [img-alt](http://i.imgur.com/svWYrBY.png) Redux Store
+# ![alt tag](http://i.imgur.com/svWYrBY.png) Redux Store
 Redux custom store is a redux store with additional features (redux-saga, devTools)...
 
 ## Usage :
