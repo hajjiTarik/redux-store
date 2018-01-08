@@ -60,3 +60,6 @@ function indexClient(context) {
 }
 
 ```
+
+### Licence
+MIT
