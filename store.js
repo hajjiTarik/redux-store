@@ -2,37 +2,40 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware, { END } from 'redux-saga';
 import reducer from '../Reducers';
 
-export const defaultOptions = {
-  preloadState: {},
-  sagas: [],
-};
-
 export default class ConfigureStore {
-  constructor({
+  constructor(
     preloadedState = {},
     sagas = [],
-  }) {
+  ) {
+      // to load initial sagas
     this.promises = [];
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [
       sagaMiddleware,
     ];
     let composeEnhancers = compose;
+      // when the store will be instantiated in the server, 
+      // you must be sure that the window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      // will not crash the application
     if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
       composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || composeEnhancers;
     }
     const enhancer = applyMiddleware(...middlewares);
+      
+      // create store
     const store = createStore(
       reducer,
       preloadState,
       composeEnhancers(enhancer),
     );
-
+    
+      // run the sagas sequentially and map it with the 'this.promises'
     this.promises = (!(sagas instanceof Array) ? [sagas] : sagas)
       .map(saga => sagaMiddleware.run(saga).done);
-
+    
     this.hmrReducers();
     
+      // create new store with redux store and the functions we want to expose
     Object.assign(this, store,
       {
         runSaga: sagaMiddleware.run,
@@ -48,6 +51,10 @@ export default class ConfigureStore {
     }
   }
   
+  // when receive SAGA INIT ACTION (redux action)
+  // we make sur that all actions are dispatched
+  // after that we stop the loop with ( END )
+  // and we resolve all promises
   initActions = actions => new Promise((resolve, reject) => {
     actions.forEach((action) => {
       this.dispatch(action);
