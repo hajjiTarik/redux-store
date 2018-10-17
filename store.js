@@ -4,7 +4,7 @@ import reducer from '../Reducers';
 
 export default class ConfigureStore {
   constructor(
-    preloadedState = {},
+    preloadState = {},
     sagas = [],
   ) {
       // to load initial sagas
@@ -36,11 +36,11 @@ export default class ConfigureStore {
     this.hmrReducers();
     
       // create new store with redux store and the functions we want to expose
-    Object.assign(this, store,
-      {
-        runSaga: sagaMiddleware.run,
-      },
-    );
+    this = {...this, store,
+        {
+          runSaga: sagaMiddleware.run,
+        },
+       };
   }
 
   hmrReducers = () => {
